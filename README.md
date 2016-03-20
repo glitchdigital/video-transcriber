@@ -1,16 +1,16 @@
 # Computer Assisted Video/Audio Transcription 
 
-This is a prototype web based tool for computer assisted transcription. You can simply drag and drop a video or audio file to transcribe it.
+This is a prototype web based tool for computer assisted transcription.
+
+You can simply drag and drop a video or audio file to transcribe it.
 
 Words the computer isn't sure about are highlighted for review and you can click to edit the text - which will also jump the video to the appropriate point and start playing it so you can check the transcription and amend it if you need to.
 
 The goal is to make transcribing video and audio files easier and faster.
 
-If you do a lot of transcribing, work in journalism and would like an instance setup and configured for you get in touch with <enquiries@glitch.digital>.
+![screenshot](https://raw.githubusercontent.com/glitchdigital/video-transcriber/master/screenshot.png)
 
-If you think it's something your organisation might find useful we can setup a free instance for you to try out.
-
-[[https://github.com/glitchdigital/video-transcriber/blob/master/img/screenshot.png|alt=screenshot]]
+If you do a lot of transcribing and work in journalism or the media and would like an instance setup and configured for you to try out, get in touch with <enquiries@glitch.digital>.
 
 # Getting started
 
@@ -38,7 +38,7 @@ You will also need to have `ffmpeg` installed. If it is already in your path you
 
     FFMPEG="/usr/local/bin/ffmpeg"
 
-# About 
+# About glitch.digital
 
 This protoype software is provided free of charge under and released under the MIT Licence by glitch.digital.
 
