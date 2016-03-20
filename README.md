@@ -6,7 +6,9 @@ You can simply drag and drop a video or audio file to transcribe it.
 
 Words the computer isn't sure about are highlighted for review and you can click to edit the text - which will also jump the video to the appropriate point and start playing it so you can check the transcription and amend it if you need to.
 
-The goal is to make transcribing video and audio files easier and faster.
+The goal is to make transcribing easier and faster.
+
+[Read more about this prototype](https://medium.com/glitch-digital/preview-of-a-video-transcription-tool-452e043daef5).
 
 ![screenshot](https://raw.githubusercontent.com/glitchdigital/video-transcriber/master/screenshot.png)
 
