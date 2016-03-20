@@ -1,0 +1,318 @@
+<html>
+  <head>
+    <title>Video Transcription Tool</title>
+    <link rel="stylesheet" href="http://glitch.digital/assets/1.0.9/main.css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+      #transcription[data-unchecked] .transcription {
+         background: #f1f1f1;
+      }
+      #transcription[data-unchecked] .low-confidence {
+        background: #ffcc02;
+      }
+      .transcription {
+         margin: 20px 0;
+         padding: 0px 10px;
+      }
+      .transcription span {
+        color: black;
+      }
+      .transcription p {
+        position: relative;
+        margin: 5px 0px;
+        padding: 5px 0px;
+        animation-duration: 0.001s;
+        animation-name: nodeInserted;
+        text-align: left;
+      }
+      .transcription p[data-section-in]:before {
+        display: block;
+        position: absolute;
+        top: 5px;
+        left: -130px;
+        border-radius: 10px;
+        font-size: 15px;
+        width: 110px;
+        text-align: center;
+        padding: 2px 10px;
+        font-family: FontAwesome;
+        content: "\f017  "attr(data-section-in);
+      }
+      #transcription[data-unchecked] .transcription p[data-section-in]:before {
+        background: #f1f1f1;
+        color: #888;
+
+      }
+      #transcription-text:focus {
+        outline: none;
+      }
+      #uploader {
+        position: relative;
+        width: 80%;
+        height: 200px;
+        margin: 0 auto;
+        border: 2px dashed #555;
+        background: #f1f1f1;
+        overflow: auto;
+        box-shadow: 10px 10px #ccc;
+      }
+      #uploader:hover {
+        background: #fafafa;
+        border-color: #1089fc;
+        color: #1089fc;
+        box-shadow: 10px 10px #A0CFFC;
+      }
+      @keyframes nodeInserted {  
+        from { opacity: 1; }
+        to { opacity: 1; }  
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav-container">
+      <div class="nav">
+        <a href="/" class="logo"><strong>glitch</strong>.digital</a>
+        <div id="navLoadingBar" class="bar"></div>
+      </div>
+    </div>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-sm-8 col-sm-push-2">
+          <h1 style="margin: 0;">Video Transcription Tool</h1>
+          <p class="blockquote" style="margin-top: 10px; margin-bottom: 30px; display: inline-block;">
+            Computer assisted transcription from glitch.digital
+          </p>
+
+          <div class="clearfix">
+            <video id="video" controls="true" src="" style="display: none; width: 80%; margin-left: auto; margin-right: auto; margin-bottom: 30px;" />
+          </div>
+
+          <form id="uploader">
+            <label class="lead" style="position: absolute; top: 90px; left: 0; width: 100%;"><i class="fa fa-fw fa-lg fa-cloud-upload"></i> Upload video or audio</label>
+            <input type="file" id="siofu_input" style="cursor: pointer; width: 100%; height: 200px; opacity: 0;"/>
+          </form>
+      
+          <div id="upload-progress" style="margin: 20px auto; display: none; background: #f1f1f1;">
+            <div id="upload-percent-complete" style="height: 10px; background: #000;"></div>
+          </div>
+      
+          <div id="status" class="lead"></div>
+
+          <div id="transcription" style="display: none;">
+            <div id="transcription-text" class="transcription">
+              <!-- Example transcription -->
+              <p data-section-in="00:00:01">Lorem ipsum <span data-in="0.2" class="low-confidence">dolor</span> sit amet, consectetur adipiscing elit.</p>
+              <p data-section-in="00:00:11">Quisque in scelerisque ante, at laoreet ligula. Cras <span data-in="11.5" class="medium-confidence">aliquam</span> sodales quam, eu viverra lacus rutrum nec.</p>
+              <p data-section-in="00:00:13">Vivamus consectetur lobortis fermentum. Aliquam erat <span data-in="14.1" class="low-confidence">volutpat</span>. Morbi laoreet pellentesque facilisis.</p>
+            </div>
+            <p class="text-right">
+              <button id="transcript-reviewed" style="visibility: hidden" onclick="markTranscriptionAsChecked(this)" class="btn"><i class="fa fa-check"></i> Transcript reviewed</button>
+            </p>
+          </div>
+          
+          <p id="refresh" style="margin-top: 50px; display: none;">
+            <a href="#" class="btn" onclick="window.location=window.location"><i class="fa fa-refresh"></i> Transcribe another video…</a>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <p style="margin-top: 40px;">
+            This software is released under the MIT Licence. © <a href="http://glitch.digital">GLITCH.DIGITAL LIMITED</a>, 2016.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/siofu/client.js"></script>
+    <script>
+      var socket = io.connect();
+      var uploadProgress = 0;
+      var fileName = "";
+      var fileExtension = "";
+      var uploader = new SocketIOFileUpload(socket);
+
+      socket.on('transcription_start', function(event) {
+        document.getElementById("status").innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> Transcribing...';
+        document.getElementById("transcription-text").innerHTML = '';
+        document.getElementById("transcription").style.display = 'block';
+        document.getElementById("video").play();
+      });
+
+      socket.on('transcription_progress', function(event) {
+        document.getElementById("transcription-text").innerHTML = formatTranscriptAsHtml(event.transcription);
+      });
+      
+      socket.on('transcription_error', function(event) {
+        document.getElementById('transcription-text').innerHTML = "<p><strong>Transcription unavailable</strong> An error occured with the transcription service.</p>"
+      });
+  
+      socket.on('transcription_complete', function(event) {
+        document.getElementById("status").innerHTML = "Transcribing complete";
+        document.getElementById("transcription-text").setAttribute('contentEditable', true);
+        document.getElementById("transcription").setAttribute('data-unchecked', true);
+        document.getElementById("transcript-reviewed").style.visibility = 'visible';
+        var insertListener = function(event) {
+          if (event.animationName == "nodeInserted") {
+            event.target.removeAttribute('data-section-in');
+            var span = event.target.getElementsByTagName('span')[0];
+            if (span.getAttribute('data-in'))
+              event.target.setAttribute('data-section-in', secondsToHHMMSS(span.getAttribute('data-in')));
+          }
+        }
+        document.addEventListener("animationstart", insertListener, false);
+        document.addEventListener("MSAnimationStart", insertListener, false);
+        document.addEventListener("webkitAnimationStart", insertListener, false);
+        setTimeout(function() {
+          document.getElementById("status").innerHTML = "";
+          document.getElementById("refresh").style.display = 'block';
+        }, 1000);
+      });
+
+      uploader.addEventListener("error", function(event) {
+        document.getElementById("status").innerHTML = "Error uploading: "+event.message;
+      });
+
+      socket.addEventListener("file_error", function(event) {
+        document.getElementById("status").innerHTML = '<i class="fa fa-fw fa-exclamation-triangle"></i> '+event.message;
+      });
+
+      socket.addEventListener("file_ready", function(event) {
+        console.log(event.pathToFile);
+        document.getElementById("video").src = event.pathToFile;
+        document.getElementById("video").style.display = "block";
+      });
+
+      uploader.addEventListener("start", function(event) {
+        document.getElementById("uploader").style.display = 'none';
+        document.getElementById("status").innerHTML = "Uploading...";
+        uploadProgress = 0;
+        document.getElementById("upload-progress").style.display = 'block';
+      });
+      
+      uploader.addEventListener("progress", function(event) {
+        var p = (event.bytesLoaded / event.file.size);
+        if (p != 1) {
+          if (Math.round(p * 100) > uploadProgress) {
+            uploadProgress = Math.round(p * 100);
+            document.getElementById("status").innerHTML = uploadProgress+"% complete";
+            document.getElementById("upload-percent-complete").style.width = uploadProgress+'%';
+          }
+        }
+      });
+  
+      uploader.addEventListener("complete", function(event) {
+        uploadProgress = 100;
+        document.getElementById("upload-progress").style.display = 'none';
+        setTimeout(function() {
+          document.getElementById("upload-percent-complete").style.width = '0%';
+        }, 1000);
+      });
+  
+      uploader.listenOnInput(document.getElementById("siofu_input"));
+      document.getElementById('siofu_input').onchange = function() {
+        var filename = this.value;
+        var lastIndex = filename.lastIndexOf("\\");
+        if (lastIndex >= 0) {
+            filename = filename.substring(lastIndex + 1);
+        }
+        fileExtension = filename.substring(filename.lastIndexOf(".")+1);
+      };
+      
+      document.onmousedown = function(event) {
+        var parent = document.querySelector('#transcription-text');
+        if (parent.contains(event.target)) {
+          if (event.target.getAttribute('data-in')) {
+            event.target.className = "";
+            document.getElementById("video").currentTime = event.target.getAttribute('data-in');
+            document.getElementById("video").play();
+          }
+          if (event.target.nodeName == 'SPAN') {
+            event.target.style.color = "inherit";
+            event.target.style.backgroundColor = "inherit";
+          }
+          // if (event.target.parentElement.nodeName == 'FONT') {
+          //   event.target.parentElement.style.color = "inherit";
+          // }
+        }
+        
+      };
+
+      function formatTranscriptAsHtml(transcript) {
+        var formattedTranscript = "";
+        var newSentanceThreshold = 0.5;
+
+        transcript.forEach(function(w, index) {
+          var word = w.word;
+          // Capitalise first letter of word if it's:
+          // (a) the first word in the transcript
+          // (b) the first word in a new sentence
+          if (index == 0 || (transcript[index-1].out + newSentanceThreshold) < w.in) {
+            word = word.charAt(0).toUpperCase() + word.slice(1);
+            formattedTranscript += '<p data-section-in="'+secondsToHHMMSS(w.in)+'">';
+          }
+
+          if (w.confidence < 0.7) {
+            word = '<span data-in="'+w.in+'" data-confidence="'+w.confidence+'" class="low-confidence">'+word+'</span>';
+          } else {
+            word = '<span data-in="'+w.in+'" data-confidence="'+w.confidence+'" class="maximum-confidence">'+word+'</span>';
+          }
+
+          formattedTranscript += word;
+
+          if (transcript[index+1]) {
+            if ((w.out + newSentanceThreshold) < transcript[index+1].in) {
+              // If it's the last word in a sentance add a period
+              formattedTranscript += ".";
+              formattedTranscript += "</p>";
+            } else {
+              // Otherwise just add a space
+              formattedTranscript += " ";
+            }
+          } else {
+            // If it's the last word in the transcript just add with a period
+            formattedTranscript += ".";
+            formattedTranscript += "</p>";
+          }
+        });
+        return formattedTranscript;
+      }
+
+      function secondsToHHMMSS(seconds) {
+        var sec_num = parseInt(seconds, 10); // don't forget the second param
+        var hours   = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        var hourSeparator = ':';
+        var minuteSeparator = ':';
+
+        if(hours == 0){hours = '';hourSeparator = '';}
+        if (minutes < 10 && hours != 0) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        var time = hours+hourSeparator+minutes+minuteSeparator+seconds;
+        return time;
+      }
+
+      function markTranscriptionAsChecked(button) {
+        button.style.visibility = "hidden";
+        document.getElementById("transcription").removeAttribute('data-unchecked');
+        document.getElementById("transcription-text").removeAttribute('contentEditable');
+        var transcriptionTextChildren = Array.prototype.slice.call(document.getElementById("transcription-text").childNodes);        
+        transcriptionTextChildren.forEach(function(child) {
+          if (child.nodeName == 'P') {
+            var pChildren = Array.prototype.slice.call(child.childNodes);
+            pChildren.forEach(function(pChild) {
+              if (pChild.nodeName == 'SPAN') {
+                pChild.style.color = "inherit";
+                pChild.style.backgroundColor = "inherit";
+              }
+            });
+          }
+        });
+      }
+
+    </script>
+  </body>
+</html>
