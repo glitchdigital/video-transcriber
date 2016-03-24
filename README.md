@@ -41,23 +41,22 @@ Required: sign up for an IBM Bluemix account (30 day free trial), select the Spe
 - or
 - https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/gs-credentials.shtml
 
-Credit: Thanks to Ilya for these detailed directions
+Credit: Thanks to @ilyankou for these detailed directions
 
-1) Install HomeBrew: open the Terminal application, copy and paste the command below, and press RETURN:
+1) Install [HomeBrew](http://brew.sh/): open the Terminal application, copy and paste the command below, and press RETURN:
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-2) Install ffmpeg: copy and paste the following text into Terminal and press RETURN:
+2) Use Homebrew to install [ffmpeg](http://www.renevolution.com/how-to-install-ffmpeg-on-mac-os-x/): copy and paste the following text into Terminal and press RETURN:
 ```
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-frei0r --with-libass --with-libvo-aacenc --with-libvorbis --with-libvpx --with-opencore-amr --with-openjpeg --with-opus --with-rtmpdump --with-schroedinger --with-speex --with-theora --with-tools
 ```
 
-3) Install Node in the terminal:
+3) Use Homebrew to install [Node.js](http://blog.teamtreehouse.com/install-node-js-npm-mac) in the terminal:
 ```
 brew install node
 ```
-
 4) Download the latest version of transcriber from: https://github.com/glitchdigital/video-transcriber. Click the "download Zip" button, save it to a folder on your local Mac (such as Downloads) and unzip it.
 
 5) In Terminal, navigate to the folder with unpacked video-transcriber-master and install it. For example, if you unpacked it in Downloads folder, do:
@@ -68,13 +67,13 @@ Then from that location, in the Terminal, install it:
 ```
 npm install
 ```
-6) In the terminal, start the video transcriber, using your Watson Speech to Text API username and password (described above), which should look something like this (use your own credentials):
+6) In the terminal, use npm to start the video transcriber, using your Watson Speech to Text API username and password [using your own credentials](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/gs-credentials.shtml), which should look something like this:
 ```
 WATSON_SPEECH_TO_TEXT_API_USERNAME="abc123-4567-8910" WATSON_SPEECH_TO_TEXT_API_PASSWORD="abcdefghij" npm start 
 ```
 7) Keep the terminal window open while running the tool.
 
-8) Open a browser to http://localhost:3000. Drag and drop audio or video to transcribe.
+8) Open a browser to [http://localhost:3000](http://localhost:3000). Drag and drop audio or video to transcribe.
 
 
 # About glitch.digital
