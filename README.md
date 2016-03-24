@@ -14,21 +14,47 @@ The goal is to make transcribing easier and faster.
 
 If you do a lot of transcribing and work in journalism or the media and would like an instance setup and configured for you to try out, get in touch with <enquiries@glitch.digital>.
 
-# Getting started
+# Getting started (Expanded with thanks to Ilya)
 
-You will need node.js and ffmpeg installed to run this software. 
+Overview: To run locally on a Mac, we need to install HomeBrew package manager, which we will use to install Node.js and ffmpeg and their dependencies. 
 
-You will also need to sign up for an IBM Bluemix account and get an Username and Password for the Speech To Text API:
+Also, sign up for an IBM Bluemix account (30 day free trial), select the Speech to Text API, and obtain username and password.
+- https://console.ng.bluemix.net/catalog/services/speech-to-text
+- or
+- https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/gs-credentials.shtml
 
-https://console.ng.bluemix.net/catalog/services/speech-to-text
+## Installing (expanded)
 
-## Installing
+1. Install HomeBrew: open the Terminal application, copy and paste the command below, and press RETURN:
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
-To install required libraries, use npm install:
+2. Install ffmpeg: copy and paste the following text into Terminal and press RETURN:
+```
+brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-frei0r --with-libass --with-libvo-aacenc --with-libvorbis --with-libvpx --with-opencore-amr --with-openjpeg --with-opus --with-rtmpdump --with-schroedinger --with-speex --with-theora --with-tools
+```
 
-    npm install
+3. Install Node in the terminal:
+```
+brew install node
+```
+
+4. Download the latest version of transcriber from: https://github.com/glitchdigital/video-transcriber. Click the "download Zip" button, save it to a folder on your local Mac (such as Downloads) and unzip it.
+
+5. In Terminal, navigate to the folder with unpacked video-transcriber-master. For example, if you unpacked it in Downloads folder, do:
+```
+cd Downloads/video-transcriber-master/
+```
+
+There, run:
+npm install
+
+
 
 ## Running
+
+
 
 You will need to specify your USERNAME and PASSWORD for the Watson Speech To Text API as environment variables when calling `npm start`.
 
