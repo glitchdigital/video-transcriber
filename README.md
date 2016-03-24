@@ -14,57 +14,68 @@ The goal is to make transcribing easier and faster.
 
 If you do a lot of transcribing and work in journalism or the media and would like an instance setup and configured for you to try out, get in touch with <enquiries@glitch.digital>.
 
-# Getting started (Expanded with thanks to Ilya)
+# Before you begin
+Think of this free tool as a **first draft** transcription, which a human will need to review and clean up, though it should reduce total time. Before installing the video/audio transcriber on a local Mac (which requires several steps), try the audio-only limited-length web interface for a preview of the transcript quality: https://speech-to-text-demo.mybluemix.net/?
 
-Overview: To run locally on a Mac, we need to install HomeBrew package manager, which we will use to install Node.js and ffmpeg and their dependencies. 
+This audio-only web interface only accepts files in WAV (or FLAC or OPUS) formats.
+- To convert video file to WAV audio format:
+	- QuickTime Player > File > Save > Audio Only > .m4a
+	- iTunes > Preferences > General > Input settings (choose WAV), then upload and select the .m4a file in iTunes, right-click > create WAV version
 
-Also, sign up for an IBM Bluemix account (30 day free trial), select the Speech to Text API, and obtain username and password.
+If you like what you see, and want to upload longer-length video and audio files, proceed with installation instructions below.
+
+Strengths of local install: 
+- upload audio or video, no length limitations (except 1000 minutes free under IBM api free trial)
+- in web preview, clickable timestamps to review portions, but no way to copy and paste timestamps
+
+Limits:
+- weak on-screen editing
+- slightly higher transcription quality using the audio-only limited-length web upload interface: https://speech-to-text-demo.mybluemix.net/?
+
+## Install and Run on local Mac
+
+Overview: To run locally on a Mac, we need to install HomeBrew package manager, which we will use to install Node.js and ffmpeg and their dependencies, and the downloaded version of the video-transcriber tool. We will use the Terminal tool to install all of these parts, then run the tool inside a browser window.
+
+Required: sign up for an IBM Bluemix account (30 day free trial), select the Speech to Text API, and obtain username and password (up to 1000 minutes free). See more details at
 - https://console.ng.bluemix.net/catalog/services/speech-to-text
 - or
 - https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/gs-credentials.shtml
 
-## Installing (expanded)
+Credit: Thanks to Ilya for these detailed directions
 
-1. Install HomeBrew: open the Terminal application, copy and paste the command below, and press RETURN:
+1) Install HomeBrew: open the Terminal application, copy and paste the command below, and press RETURN:
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-2. Install ffmpeg: copy and paste the following text into Terminal and press RETURN:
+2) Install ffmpeg: copy and paste the following text into Terminal and press RETURN:
 ```
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-frei0r --with-libass --with-libvo-aacenc --with-libvorbis --with-libvpx --with-opencore-amr --with-openjpeg --with-opus --with-rtmpdump --with-schroedinger --with-speex --with-theora --with-tools
 ```
 
-3. Install Node in the terminal:
+3) Install Node in the terminal:
 ```
 brew install node
 ```
 
-4. Download the latest version of transcriber from: https://github.com/glitchdigital/video-transcriber. Click the "download Zip" button, save it to a folder on your local Mac (such as Downloads) and unzip it.
+4) Download the latest version of transcriber from: https://github.com/glitchdigital/video-transcriber. Click the "download Zip" button, save it to a folder on your local Mac (such as Downloads) and unzip it.
 
-5. In Terminal, navigate to the folder with unpacked video-transcriber-master. For example, if you unpacked it in Downloads folder, do:
+5) In Terminal, navigate to the folder with unpacked video-transcriber-master and install it. For example, if you unpacked it in Downloads folder, do:
 ```
 cd Downloads/video-transcriber-master/
 ```
-
-There, run:
+Then from that location, in the Terminal, install it:
+```
 npm install
+```
+6) In the terminal, start the video transcriber, using your Watson Speech to Text API username and password (described above), which should look something like this (use your own credentials):
+```
+WATSON_SPEECH_TO_TEXT_API_USERNAME="abc123-4567-8910" WATSON_SPEECH_TO_TEXT_API_PASSWORD="abcdefghij" npm start 
+```
+7) Keep the terminal window open while running the tool.
 
+8) Open a browser to http://localhost:3000. Drag and drop audio or video to transcribe.
 
-
-## Running
-
-
-
-You will need to specify your USERNAME and PASSWORD for the Watson Speech To Text API as environment variables when calling `npm start`.
-
-e.g. That should look something like this:
-
-    WATSON_SPEECH_TO_TEXT_API_USERNAME="19c7e913-ea42-3244-bcc2-7a118ee6f41c1" WATSON_SPEECH_TO_TEXT_API_PASSWORD="Kfm82jS2n51V" npm start
-
-You will also need to have `ffmpeg` installed. If it is already in your path you don't need to do anything, but if if you need to specify it's location you can specify where to find it with the `FFMEPG` environment variable.
-
-    FFMPEG="/usr/local/bin/ffmpeg"
 
 # About glitch.digital
 
