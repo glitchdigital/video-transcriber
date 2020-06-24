@@ -13,6 +13,7 @@
   "dependencies": {
     "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "ibm-watson": "^5.6.0",
     "socket.io": "^1.4.5",
     "socketio-file-upload": "^0.4.6",
     "watson-developer-cloud": "^1.2.3"
