@@ -18,15 +18,11 @@ If you do a lot of transcribing and work in journalism or the media and would li
 
 ## Getting started
 
-### Registering for an IBM Bluemix Account
+### Registering for an IBM Cloud Account
 
-To setup this application you'll need to sign up for an IBM Bluemix account and select the **Speech to Text API** and obtain a username and password for the API (note: not the same as the login details for your IBM Bluemix account).
+To setup this application you'll need to sign up for an [IBM Cloud](https://cloud.ibm.com) account, navigate to **Catalog** and select the **Speech to Text API** to create the service and obtain a credentials file for the API.
 
-You can get a 30 day free trial of IBM Bluemix, and there after the first 1,000 minutes of audio every month is free to transcribe.
-
-https://console.ng.bluemix.net/catalog/services/speech-to-text
-
-https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/gs-credentials.shtml
+There are multiple pricing plans to choose from, and for the free **"Lite"** plan, the first 500 minutes of audio every month is free to transcribe.
 
 ### Installing dependancies
 
@@ -48,12 +44,14 @@ npm install
 
 ## Starting the server
 
-When running `npm start` to run the application you'll also need to pass in the username and password you got for the IBM Watson Speech to Text API by using the environment variables **WATSON_SPEECH_TO_TEXT_API_USERNAME** and **WATSON_SPEECH_TO_TEXT_API_PASSWORD**. 
+When running `npm start` to run the application you'll also need to pass in path to the credentials file: `ibm-credentials.env` you got for the IBM Watson Speech to Text API by using the environment variable **IBM_CREDENTIALS_FILE** . 
 
-e.g. 
+Quoting from the [npm page for ibm-watson](https://www.npmjs.com/package/ibm-watson) : You can get this file by clicking the **Download** button for the credentials in the **Manage** tab of your service instance.
+
+e.g.
 
 ```
-WATSON_SPEECH_TO_TEXT_API_USERNAME="abc123-4567-8910" WATSON_SPEECH_TO_TEXT_API_PASSWORD="abcdefghij" npm start 
+IBM_CREDENTIALS_FILE="path/to/file/ibm-credentials.env" npm start 
 ```
 
 Once the server is running you should be able to open a browser to [http://localhost:3000](http://localhost:3000) and upload a video or audio file to transcribe it.
